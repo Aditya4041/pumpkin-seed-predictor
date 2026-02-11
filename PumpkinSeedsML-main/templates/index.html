@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pumpkin Seed Classifier</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .adi{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px 50px;
+        }
+        .adi div {
+        display: flex;
+        flex-direction: column;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #fda085;
+        }
+
+        .btn {
+            width: auto;  
+            margin: 20px auto 0;  
+            padding: 10px 40px;  
+            background: #fda085;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            display: block;  
+        }
+
+        .btn:hover {
+            background: #f57c00;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🌱 Pumpkin Seed Classification</h2>
+
+    <form action="/predict" method="post" class="adi">
+        <div>
+        <label>Area</label>
+        <input type="text" name="area" required>
+        </div>
+
+        <div>
+        <label>Perimeter</label>
+        <input type="text" name="perimeter" required>
+        </div>
+
+        <div>
+        <label>Major Axis Length</label>
+        <input type="text" name="major_axis_length" required>
+        </div>
+
+        <div>
+        <label>Minor Axis Length</label>
+        <input type="text" name="minor_axis_length" required>
+        </div>
+
+        <div>
+        <label>Convex Area</label>
+        <input type="text" name="convex_area" required>
+        </div>
+
+        <div>
+        <label>Equiv Diameter</label>
+        <input type="text" name="equiv_diameter" required>
+        </div>
+
+        <div>
+        <label>Eccentricity</label>
+        <input type="text" name="eccentricity" required>
+        </div>
+
+        <div>
+        <label>Solidity</label>
+        <input type="text" name="solidity" required>
+        </div>
+
+        <div>
+        <label>Extent</label>
+        <input type="text" name="extent" required>
+        </div>
+
+        <div>
+        <label>Roundness</label>
+        <input type="text" name="roundness" required>
+        </div>
+
+        <div>
+        <label>Aspect Ratio</label>
+        <input type="text" name="aspect_ration" required>
+        </div>
+
+        <div>
+        <label>Compactness</label>
+        <input type="text" name="compactness" required>
+        </div>
+
+      
+        <button type="submit" class="btn" style="grid-column: 1 / -1;">Predict</button>
+        
+    </form>
+
+    <div class="footer">
+        Machine Learning Project • Pumpkin Seed Analysis
+    </div>
+</div>
+
+</body>
+</html>
