@@ -2,67 +2,398 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediction Result</title>
 
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #84fab0, #8fd3f4);
-            min-height: 100vh;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .result-box {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            width: 380px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -300px;
+            right: -300px;
+            animation: pulse 8s infinite ease-in-out;
         }
 
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
+        body::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -250px;
+            left: -250px;
+            animation: pulse 10s infinite ease-in-out reverse;
         }
 
-        .prediction {
-            font-size: 26px;
-            font-weight: bold;
-            color: #2e7d32;
-            margin: 20px 0;
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% { 
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
         }
 
-        a {
-            display: inline-block;
-            margin-top: 20px;
+        .result-container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: slideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .result-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 450px;
+        }
+
+        .result-left {
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            position: relative;
+        }
+
+        .result-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .result-heading {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: fadeInDown 0.5s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-text {
+            font-size: 17px;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            animation: fadeInDown 0.5s ease-out 0.3s both;
+        }
+
+        .seed-class-container {
+            margin-bottom: 35px;
+            animation: fadeInDown 0.5s ease-out 0.4s both;
+        }
+
+        .seed-class {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: capitalize;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .class-label {
+            font-size: 14px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            animation: fillBar 1s ease-out 0.6s both;
+        }
+
+        @keyframes fillBar {
+            from { width: 0%; }
+            to { width: 95%; }
+        }
+
+        .result-right {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-right::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -150px;
+            right: -150px;
+        }
+
+        .result-right::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+        }
+
+        .image-wrapper {
+            position: relative;
+            z-index: 1;
+            animation: fadeInScale 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.7) rotate(-5deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .seed-image {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .seed-image:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             text-decoration: none;
-            background: #2e7d32;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 10px 18px;
-            border-radius: 8px;
-            transition: 0.3s;
+            padding: 14px 32px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            font-size: 15px;
+            align-self: flex-start;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            animation: fadeInUp 0.5s ease-out 0.5s both;
         }
 
-        a:hover {
-            background: #1b5e20;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-back:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-back:active {
+            transform: translateY(-1px);
+        }
+
+        .icon-back {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-back:hover .icon-back {
+            transform: translateX(-4px);
+        }
+
+        /* Decorative elements */
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+        }
+
+        .checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .result-content {
+                grid-template-columns: 1fr;
+            }
+
+            .result-right {
+                order: -1;
+                padding: 40px 30px;
+                min-height: 300px;
+            }
+
+            .result-left {
+                padding: 40px 30px;
+            }
+
+            .seed-image {
+                max-width: 250px;
+            }
+
+            .seed-class {
+                font-size: 32px;
+            }
+
+            .checkmark {
+                width: 50px;
+                height: 50px;
+                top: 20px;
+                right: 20px;
+            }
+
+            .checkmark::after {
+                font-size: 26px;
+            }
+
+            .btn-back {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="result-box">
-    <h2>🌿 Prediction Result</h2>
+<div class="result-container">
+    <div class="result-content">
+        <div class="result-left">
+            <div class="checkmark"></div>
+            <h2 class="result-heading">Result</h2>
+            <p class="result-text">Hence, based on calculation: Your seed lies in</p>
+            <div class="seed-class-container">
+                <div class="seed-class">{{ prediction }}</div>
+                <div class="class-label">Class</div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill"></div>
+                </div>
+            </div>
+            <a href="/form" class="btn-back">
+                <span class="icon-back">←</span>
+                <span>Try Another Prediction</span>
+            </a>
+        </div>
 
-    <div class="prediction">
-        {{ prediction }}
+        <div class="result-right">
+            <div class="image-wrapper">
+                <img src="/static/pumpkinseeds.jpg" alt="Pumpkin Seeds" class="seed-image">
+            </div>
+        </div>
     </div>
-
-<a href="/form">🔙 Go Back</a>
 </div>
 
 </body>

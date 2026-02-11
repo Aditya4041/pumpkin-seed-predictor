@@ -2,87 +2,225 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pumpkin Seed Classifier</title>
 
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #f6d365, #fda085);
-            min-height: 100vh;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
-        .adi{
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px 50px;
+
+        /* Animated background shapes */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 20s infinite ease-in-out;
         }
-        .adi div {
-        display: flex;
-        flex-direction: column;
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            bottom: -200px;
+            left: -200px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(50px, 50px) rotate(180deg); }
         }
 
         .container {
-            background: #ffffff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            width: 500px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px 45px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 25px;
-            color: #333;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
 
         label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-            color: #555;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #444;
+            letter-spacing: 0.3px;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 8px 10px;
-            margin-top: 5px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
             font-size: 14px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: #fda085;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]:hover {
+            border-color: #b8c1ec;
+        }
+
+        .btn-container {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
         }
 
         .btn {
-            width: auto;  
-            margin: 20px auto 0;  
-            padding: 10px 40px;  
-            background: #fda085;
+            padding: 14px 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
             color: white;
             cursor: pointer;
-            transition: 0.3s;
-            display: block;  
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            letter-spacing: 0.5px;
         }
 
         .btn:hover {
-            background: #f57c00;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
         }
 
         .footer {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 25px;
             font-size: 12px;
-            color: #777;
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .footer::before,
+        .footer::after {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .container {
+                padding: 30px 25px;
+            }
+
+            h2 {
+                font-size: 26px;
+            }
+
+            .btn {
+                padding: 12px 40px;
+                width: 100%;
+            }
+        }
+
+        /* Loading animation on submit */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn.loading::after {
+            content: '';
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: 10px;
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
         }
     </style>
 </head>
@@ -90,78 +228,88 @@
 <body>
 
 <div class="container">
-    <h2>🌱 Pumpkin Seed Classification</h2>
+    <h2>🌱 Pumpkin Seed Classifier</h2>
+    <p class="subtitle">Enter morphological features to classify seed variety</p>
 
-    <form action="/predict" method="post" class="adi">
-        <div>
-        <label>Area</label>
-        <input type="text" name="area" required>
+    <form action="/predict" method="post" class="form-grid" onsubmit="return handleSubmit(event)">
+        <div class="form-group">
+            <label>Area</label>
+            <input type="text" name="area" placeholder="e.g., 56276.0" required>
         </div>
 
-        <div>
-        <label>Perimeter</label>
-        <input type="text" name="perimeter" required>
+        <div class="form-group">
+            <label>Perimeter</label>
+            <input type="text" name="perimeter" placeholder="e.g., 888.242" required>
         </div>
 
-        <div>
-        <label>Major Axis Length</label>
-        <input type="text" name="major_axis_length" required>
+        <div class="form-group">
+            <label>Major Axis Length</label>
+            <input type="text" name="major_axis_length" placeholder="e.g., 326.149" required>
         </div>
 
-        <div>
-        <label>Minor Axis Length</label>
-        <input type="text" name="minor_axis_length" required>
+        <div class="form-group">
+            <label>Minor Axis Length</label>
+            <input type="text" name="minor_axis_length" placeholder="e.g., 220.193" required>
         </div>
 
-        <div>
-        <label>Convex Area</label>
-        <input type="text" name="convex_area" required>
+        <div class="form-group">
+            <label>Convex Area</label>
+            <input type="text" name="convex_area" placeholder="e.g., 56831.0" required>
         </div>
 
-        <div>
-        <label>Equiv Diameter</label>
-        <input type="text" name="equiv_diameter" required>
+        <div class="form-group">
+            <label>Equiv Diameter</label>
+            <input type="text" name="equiv_diameter" placeholder="e.g., 267.568" required>
         </div>
 
-        <div>
-        <label>Eccentricity</label>
-        <input type="text" name="eccentricity" required>
+        <div class="form-group">
+            <label>Eccentricity</label>
+            <input type="text" name="eccentricity" placeholder="e.g., 0.7376" required>
         </div>
 
-        <div>
-        <label>Solidity</label>
-        <input type="text" name="solidity" required>
+        <div class="form-group">
+            <label>Solidity</label>
+            <input type="text" name="solidity" placeholder="e.g., 0.9902" required>
         </div>
 
-        <div>
-        <label>Extent</label>
-        <input type="text" name="extent" required>
+        <div class="form-group">
+            <label>Extent</label>
+            <input type="text" name="extent" placeholder="e.g., 0.7453" required>
         </div>
 
-        <div>
-        <label>Roundness</label>
-        <input type="text" name="roundness" required>
+        <div class="form-group">
+            <label>Roundness</label>
+            <input type="text" name="roundness" placeholder="e.g., 0.8963" required>
         </div>
 
-        <div>
-        <label>Aspect Ratio</label>
-        <input type="text" name="aspect_ration" required>
+        <div class="form-group">
+            <label>Aspect Ratio</label>
+            <input type="text" name="aspect_ration" placeholder="e.g., 1.4809" required>
         </div>
 
-        <div>
-        <label>Compactness</label>
-        <input type="text" name="compactness" required>
+        <div class="form-group">
+            <label>Compactness</label>
+            <input type="text" name="compactness" placeholder="e.g., 0.8207" required>
         </div>
 
-      
-        <button type="submit" class="btn" style="grid-column: 1 / -1;">Predict</button>
-        
+        <div class="btn-container">
+            <button type="submit" class="btn" id="submitBtn">Classify Seed</button>
+        </div>
     </form>
 
     <div class="footer">
-        Machine Learning Project • Pumpkin Seed Analysis
+        Machine Learning Project
     </div>
 </div>
+
+<script>
+    function handleSubmit(event) {
+        const btn = document.getElementById('submitBtn');
+        btn.classList.add('loading');
+        btn.textContent = 'Analyzing';
+        return true;
+    }
+</script>
 
 </body>
 </html>
